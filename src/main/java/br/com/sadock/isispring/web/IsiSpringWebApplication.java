@@ -78,13 +78,14 @@ public class IsiSpringWebApplication {
 	private static void extractMethods(String className) throws Exception {
 		// recupero todos os métodos da classe
 		String httpMethod = "";
+		String prefix = "";
 		String path = "";
 		for (Method method: Class.forName(className).getDeclaredMethods()) {
 			// para cada método vou recuperar todas as suas anotações
 			for (Annotation annotation : method.getAnnotations()) {
 				if (annotation.annotationType().getName().equals("br.com.sadock.isispring.annotations.IsiGetMethod")) {
 					path = ((IsiGetMethod) annotation).value();
-					//IsiLogger.log("", " + method " + method.getName() + " - URL PATH = " + BLUE + "🟢" + RESET + " [GET] " + path);
+					//IsiLogger.log("", " + method " + method.getName() + " - URL PATH = " + BLUE + "🟢" + RESET + " [GET] " + path); 
 					httpMethod = "GET";	
 				}
 				else if (annotation.annotationType().getName().equals("br.com.sadock.isispring.annotations.IsiPostMethod")) {
@@ -98,7 +99,8 @@ public class IsiSpringWebApplication {
 		}
 		
 		for (RequestControllerData item : ControllersMap.values.values()) {
-			IsiLogger.log("", "     " + item.httpMethod + ": " + item.url + " [" + item.controllerClass + "." + item.controllerMethod + "]");
+			prefix = (item.httpMethod.equals("GET") ? BLUE : GREEN) + "🟢 " + RESET;
+			IsiLogger.log("", "     " + prefix + "" + item.httpMethod + " " + item.url + " [" + item.controllerClass + "." + item.controllerMethod + "]");
 		}
 
 	}
