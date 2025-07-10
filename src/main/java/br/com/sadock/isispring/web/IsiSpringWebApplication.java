@@ -11,8 +11,11 @@ import org.apache.catalina.startup.Tomcat;
 
 import br.com.sadock.isispring.annotations.IsiGetMethod;
 import br.com.sadock.isispring.annotations.IsiPostMethod;
+import br.com.sadock.isispring.datastructures.ControllersMap;
+import br.com.sadock.isispring.datastructures.RequestControllerData;
 import br.com.sadock.isispring.explorer.ClassExplorer;
 import br.com.sadock.isispring.util.IsiLogger;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class IsiSpringWebApplication {
 	
@@ -74,18 +77,28 @@ public class IsiSpringWebApplication {
 
 	private static void extractMethods(String className) throws Exception {
 		// recupero todos os métodos da classe
+		String httpMethod = "";
+		String path = "";
 		for (Method method: Class.forName(className).getDeclaredMethods()) {
 			// para cada método vou recuperar todas as suas anotações
 			for (Annotation annotation : method.getAnnotations()) {
 				if (annotation.annotationType().getName().equals("br.com.sadock.isispring.annotations.IsiGetMethod")) {
-					String path = ((IsiGetMethod) annotation).value();
-					IsiLogger.log("", " + method " + method.getName() + " - URL PATH = " + BLUE + "🟢" + RESET + " [GET] " + path);
+					path = ((IsiGetMethod) annotation).value();
+					//IsiLogger.log("", " + method " + method.getName() + " - URL PATH = " + BLUE + "🟢" + RESET + " [GET] " + path);
+					httpMethod = "GET";	
 				}
 				else if (annotation.annotationType().getName().equals("br.com.sadock.isispring.annotations.IsiPostMethod")) {
-					String path = ((IsiPostMethod) annotation).value();
-					IsiLogger.log("", " + method " + method.getName() + " - URL PATH = " + GREEN + "🔵" + RESET + " [POST] " + path);
+					path = ((IsiPostMethod) annotation).value();
+					//IsiLogger.log("", " + method " + method.getName() + " - URL PATH = " + GREEN + "🔵" + RESET + " [POST] " + path);
+					httpMethod = "POST";
 				}
+				RequestControllerData getData = new RequestControllerData(httpMethod, path, className, method.getName());
+				ControllersMap.values.put(httpMethod+path, getData);
 			}
+		}
+		
+		for (RequestControllerData item : ControllersMap.values.values()) {
+			IsiLogger.log("", "     " + item.httpMethod + ": " + item.url + " [" + item.controllerClass + "." + item.controllerMethod + "]");
 		}
 
 	}
