@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
+import com.google.gson.Gson;
+
 import br.com.sadock.isispring.datastructures.ControllersInstances;
 import br.com.sadock.isispring.datastructures.ControllersMap;
 import br.com.sadock.isispring.datastructures.RequestControllerData;
@@ -24,6 +26,8 @@ public class IsiDispatchServlet extends HttpServlet {
 		if (request.getRequestURL().toString().endsWith("/favicon.ico")) {
 			return;
 		}
+		PrintWriter out = new PrintWriter(response.getWriter());
+		Gson gson = new Gson();
 
 		String url = request.getRequestURI();
 		String httpMethod = request.getMethod().toUpperCase();
@@ -54,8 +58,7 @@ public class IsiDispatchServlet extends HttpServlet {
 			}
 			
 			IsiLogger.log("IsiDispatchServlet", "Invoking Method " + controllerMethod.getName() + " to handle request");
-			PrintWriter out = new PrintWriter(response.getWriter());
-			out.println(controllerMethod.invoke(controller));
+			out.println(gson.toJson(controllerMethod.invoke(controller)));
 			out.close();
 			// executar o método e (no fundo, escrever na saída a execução dele)
 			
