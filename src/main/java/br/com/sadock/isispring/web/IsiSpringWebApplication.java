@@ -13,9 +13,9 @@ import br.com.sadock.isispring.annotations.IsiGetMethod;
 import br.com.sadock.isispring.annotations.IsiPostMethod;
 import br.com.sadock.isispring.datastructures.ControllersMap;
 import br.com.sadock.isispring.datastructures.RequestControllerData;
+import br.com.sadock.isispring.datastructures.ServiceImplementationMap;
 import br.com.sadock.isispring.explorer.ClassExplorer;
 import br.com.sadock.isispring.util.IsiLogger;
-import jakarta.servlet.http.HttpServletRequest;
 
 public class IsiSpringWebApplication {
 	
@@ -69,6 +69,14 @@ public class IsiSpringWebApplication {
 						.equals("br.com.sadock.isispring.annotations.IsiController")) {
 					IsiLogger.log("Metadata Explorer", "Found a Controller: " + isiClass);
 					extractMethods(isiClass);
+				}
+				else if (classAnnotation.annotationType().getName()
+						.equals("br.com.sadock.isispring.annotations.IsiService")) {
+					IsiLogger.log("Metadata Explorer", "Found a Service Implementation: " + isiClass);
+					for(Class<?> interf : Class.forName(isiClass).getInterfaces()) {
+						IsiLogger.log("Metadata Explorer", "	 Class implements: " + interf.getName());
+						ServiceImplementationMap.implementations.put(interf.getName(), isiClass);
+					}
 				}
 			}
 		}
