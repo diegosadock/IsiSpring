@@ -1,141 +1,46 @@
-# IsiSpring 🌐
+# IsiSpring
 
-**IsiSpring** é um mini *framework web* desenvolvido com Java puro, focado em compreender e implementar a infraestrutura base de um servidor HTTP. Criado como parte da experiência educacional na **IsiFLIX**, o objetivo é aplicar, na prática, os fundamentos de desenvolvimento web e conceitos teóricos como **Teoria dos Grafos**, **Recursividade**, **Java Reflection** e **Injeção de Dependência**.
+Mini framework web educacional em Java para explorar, por dentro, conceitos usados por frameworks como o Spring. O projeto implementa roteamento, execução de controllers por reflection e injeção de dependência, usando Tomcat embarcado como servidor HTTP.
 
-> 🔍 Aqui, você não usa o Spring Framework — você *cria* o seu próprio Spring!
+## O que o projeto demonstra
 
----
+- Controllers com anotações para rotas GET e POST.
+- Resolução de handlers com Java Reflection.
+- Injeção de dependências baseada em interfaces.
+- Leitura do corpo da requisição e serialização JSON com Gson.
+- Organização de uma aplicação web em camadas MVC.
 
-## 🎯 Objetivos do Projeto
+## Stack
 
-- Criar um servidor HTTP do zero
-- Implementar roteamento e tratamento de requisições (GET/POST)
-- Usar Java Reflection para invocar controladores dinamicamente
-- Trabalhar com Injeção de Dependência usando interfaces e implementações
-- Reforçar o uso de conceitos de estrutura de dados e algoritmos no backend
+- Java 17+
+- Maven
+- Tomcat embarcado
+- Gson
 
----
+## Como executar
 
-## 🛠️ Tecnologias & Conceitos Utilizados
-
-- Java (puro)
-- Sockets e Manipulação de Requisições HTTP
-- Java Reflection
-- Injeção de dependência
-- Estrutura MVC
-- Teoria dos Grafos (para roteamento)
-- Recursividade
-- Interfaces e Implementações
-- Manipulação de arquivos `.html`
-
----
-
-## 🚀 Como executar
-
-### Pré-requisitos
-
-- Java 17 ou superior instalado
-
-### Rodando a aplicação
+Pré-requisitos: JDK 17 ou superior e Maven.
 
 ```bash
 git clone https://github.com/diegosadock/IsiSpring.git
 cd IsiSpring
-javac -d out $(find ./src -name "*.java")
-java -cp out isi.server.WebServer
+mvn clean compile
 ```
 
+Abra o projeto como aplicação Maven na IDE e execute a classe de entrada `br.com.sadock.isispring.IsiSpringTestApplication` com as dependências do Maven no classpath. O servidor embarcado inicia na porta `8081`.
 
-Depois acesse no navegador:
-```
-http://localhost:8080
-```
-📡 Exemplo de uso
+## Rotas de exemplo
 
-```java
-@IsiController
-public class HelloController {
-	
-	@IsiInjected IService service;
-	
-	@IsiGetMethod("/hello")
-	public String sayHelloWorld() {
-		return "Hello World";
-	}
+A aplicação de demonstração inclui endpoints como:
 
-	@IsiGetMethod("/teste")
-	public String sayTeste() {
-		return "Teste funcionando";
-	}
-	
-	@IsiGetMethod("/produto")
-	public Produto exibirProduto() {
-		Produto p = new Produto();
-		p.setId(123456);
-		p.setNome("Computador");
-		p.setPreco(2500.00);
-		p.setLinkFoto("computador.jpg");
-		return p;
-	}
-	
-	@IsiPostMethod("/produto")
-	public Produto cadastrarProduto(@IsiBody Produto novo) {
-		System.out.println(novo);
-		return novo;
-		
-	}
-	
-	@IsiGetMethod("/injected")
-	public String sayCustomMessage() {
-		return service.sayCustomMessage("Hello World");
-	}
-	
-}
-```
+- `GET /hello`
+- `GET /teste`
+- `GET /produto`
+- `POST /produto`
+- `GET /injected`
 
----
+O endpoint de produto demonstra a conversão JSON de objetos; `/injected` mostra a injeção de uma dependência no controller.
 
-📦 Utilização em outros projetos
-Assim como no Spring Framework, para utilizar o IsiSpring em uma aplicação real:
+## Contexto
 
-1. Crie um projeto Java separado.
-
-2. Adicione o projeto IsiSpring como dependência no classpath (por exemplo, via .jar ou configuração no IDE).
-
-3. Utilize as anotações @IsiController, @IsiGetMethod, @IsiPostMethod, @IsiInjected, entre outras, conforme o padrão do framework.
-
-4. Rode a aplicação com o isi.server.WebServer.
-
----
-
-🧠 Aprendizados
-Esse projeto é ideal para quem deseja:
-
-- Entender como funcionam os bastidores de frameworks como Spring e Jakarta EE
-
-- Aprender sobre roteamento manual, servidor HTTP e Reflection
-
-- Criar sua própria lógica de injeção de dependência
-
-- Consolidar os estudos em algoritmos, estrutura de dados e Java avançado
-
----
-
-📖 Créditos:
-Este projeto faz parte da plataforma de ensino IsiFLIX, com conteúdo idealizado pelo professor Isidro.
-
----
-
-🤝 Contribuindo
-Este projeto é educacional, mas se quiser contribuir com melhorias, fique à vontade:
-
-Fork o projeto
-
-Crie uma branch com sua feature: feature/nome
-
-Envie um Pull Request com suas mudanças
-
----
-
-
-
+O IsiSpring nasceu como projeto educacional ligado à plataforma IsiFLIX. A ideia é estudar mecanismos fundamentais de frameworks web por meio de uma implementação pequena e explorável.
